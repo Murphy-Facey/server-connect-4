@@ -1,5 +1,4 @@
 function game_over_screen(game_board, winner) {
-
 	game_board.innerHTML += `
 	<div id='game_over'>
 		<p class='winner-title'>Game over! Player ${winner} wins!</p>
@@ -13,7 +12,6 @@ function game_over_screen(game_board, winner) {
 		</div>
 	</div>
   	`;
-
 }
 
 function create_leaderboard(leaderboard_div, names, leaderboard) {
