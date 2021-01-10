@@ -1,0 +1,564 @@
+
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ------------ START PAGE ------------ */
+.start-screen {
+  width: 700px;
+  height: 500px;
+  background-color: burlywood;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#player_name {
+  width: 80%;
+  height: 55px;
+  font-size: 1.2em;
+  text-align: center;
+  outline: none;
+  border: none;
+}
+
+.play-btns {
+  width: 80%;
+  display: flex;
+  align-self: center;
+  justify-content: space-between;
+  padding-top: 15px;
+}
+
+.play-btns button {
+  width: 45%;
+  height: 55px;
+  font-size: 1.2em;
+}
+
+/* ------------------------------------ */
+/* ------------ CREATE PAGE ----------- */
+/* ------------------------------------ */
+
+.game-board {
+  width: 500px;
+  height: 500px;
+  background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-board > div {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.5em;
+}
+
+.game-board .info-div {
+  height: 60px;
+}
+
+.game-board > div + div {
+  margin-top: 10px;
+}
+
+#room-name, .mode-btns {
+  border-radius: 5px;
+  height: 65%;
+}
+
+#room-name {
+  width: 57%;
+  border: none;
+  outline: none;
+  padding-left: 2%;
+  font-size: 0.75em;
+}
+
+.inner-div, .colour-div {
+    width: 60%;
+}
+
+.inner-div {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mode-btns {
+  width: 60px;
+  font-size: 0.75em;
+  border: none;
+  outline: none;
+}
+
+.mode-btns.--selected {
+  background-color: brown;
+  color: burlywood;
+  font-weight: bolder;
+}
+
+.colour-div {
+  height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.colour-div p {
+  padding: 0px;
+  margin: 0 0 15px 0;
+}
+
+#player-colours {
+  display: flex;
+  justify-content: center;
+}
+
+.colour {
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.colour img {
+  height: 100%;
+}
+
+.colour.--selected {
+  border: 2px solid black;
+}
+
+#start-game {
+  margin-top: 10px;
+  width: 240px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  font-size: 0.75em;
+  padding: 15px 0;
+}
+
+/* ------------------------------------ */
+/* ------------- JOIN PAGE ------------ */
+/* ------------------------------------ */
+
+.join-board {
+  width: 700px;
+  height: 500px;
+  background-color: aquamarine;
+}
+
+#top-nav {
+  width: 90%;
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+}
+
+.nav-btns {
+  height: 50%;
+}
+
+#games {
+  width: 95%;
+  height: 80%;
+  padding-left: 5%;
+  overflow-y: auto;
+}
+
+.game {
+  width: 90%;
+  margin-bottom: 10px;
+  height: 100px;
+  background-color: blanchedalmond;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text-info {
+  margin-left: 10px;
+  width: 30%;
+}
+
+.available-colours {
+  width: 30%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.available-colours > div {
+  padding: 2px;
+  border: 2px solid black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-btns button {
+  height: 100%;
+  width: 125px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgb(86, 50, 121);
+  color: white;
+  font-size: 1em;
+  font-weight: bold;
+  outline: none;
+}
+
+.join-btn {
+  margin-right: 10px;
+  margin-left: 7%;
+  height: 50%;
+  width: 125px;
+  border-radius: 10px;
+  border: none;
+  background-color: blueviolet;
+  color: white;
+  font-size: 1em;
+  font-weight: bold;
+  outline: none;
+}
+
+.available-colours img {
+  width: 44px;
+}
+
+/* ------------------------------------ */
+/* ------------- GAME PAGE ------------ */
+/* ------------------------------------ */
+
+#board-container {
+  position: relative;
+}
+
+#board {
+  width: 700px;
+  height: 500px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+}
+
+#board.four-board {
+  height: 550px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  padding: 0px 11.3px;
+  margin: 0px 1px;
+}
+
+.four-board .col {
+  padding: 0 5.55px;
+  margin: 0 1px;
+}
+
+.col:hover {
+  background-color: #32ebb09a;
+  border-radius: 10px;
+}
+
+.row {
+  width: 70px;
+  height: 67px;
+  margin: 6.4px 0px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.four-board .row {
+  width: 43px;
+  height: 43px;
+  margin: 3.989px 0px;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.row img {
+  z-index: -1;
+}
+
+.four-board .row img {
+  height: 100%;
+}
+
+.row.win::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+}
+
+.fall {
+  animation-name: fall;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100px);
+  }
+
+  50% {
+    transform: translateY(0px);
+  }
+
+  75% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.row-4 {
+  width: 45px;
+  height: 45px;
+}
+
+/* ------------------------------------ */
+/* ----------- REAL GAME PAGE --------- */
+/* ------------------------------------ */
+
+.active-game {
+  font-size: 18px;
+  color: #383838;
+  font-weight: bold;
+  width: 700px;
+}
+
+.active-game-top, #timer {
+  display: flex;
+  justify-content: space-between;
+  font-family: sans-serif;
+  padding: 0 7px;
+}
+
+.active-game-top p, #timer p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(247, 212, 167);
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+
+.active-game-top p {
+  margin-bottom: 10px;
+  width: 196px;
+}
+
+#timer {
+  flex-wrap: wrap;
+}
+
+#timer p {
+  margin-top: 7px;
+  width: 261px;
+}
+
+.highlight, .times {
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: bolder;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.highlight.yellow {
+  background-color: yellow;
+  color: #9c9c1c;
+}
+
+.highlight.black {
+  background-color: #6e6d6d;
+  color: #292929;
+}
+
+.highlight.green {
+  background-color: rgb(26, 241, 26);
+  color: green;
+}
+
+.highlight.red {
+  background-color: rgb(243, 40, 80);
+  color: #8b0d26;
+}
+
+.times {
+  padding-left: 20px;
+  padding-right: 20px;
+
+  background-color: crimson;
+  color: #8b0d26;
+}
+
+.times.active {
+  background-color: #006ACC;
+  color: #7BC0FF;
+}
+
+.blurred {
+  filter: blur(5px);
+}
+
+/* ------------------------------------ */
+/* ----------- GAME OVER PAGE --------- */
+/* ------------------------------------ */
+
+#game_over {
+  position: absolute;
+  width: 500px;
+  height: 400px;
+  background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#leaderboard {
+  background-color: blueviolet;
+  width: 90%;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 20px;
+}
+
+#leaderboard * {
+  margin: 0px;
+}
+
+#leaderboard h6 {
+  font-size: 16px;
+  color: white;
+  letter-spacing: 5px;
+  position: relative;
+}
+
+#leaderboard h6::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -60%;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 2px;
+  background-color: white;
+}
+
+#leaderboard h6::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 101%;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 2px;
+  background-color: white;
+}
+
+#leaderboard p {
+  font-family: sans-serif;
+  width: 54%;
+  padding: 5px 3%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: burlywood;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+#leaderboard span {
+  border-radius: 3px;
+  font-weight: bolder;
+  padding: 5px 20px;
+  background-color: chartreuse;
+}
+
+.winner-title {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.over-btns {
+  width: 90%;
+  height: 15%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.over-btns button {
+  height: 40px;
+  width: 30%;
+  border: none;
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: blueviolet;
+  color: white;
+}
+
+#game_over.hide {
+  display: none;
+  background-color: teal;
+}
+
+/* --------------- */
+
+canvas {
+  z-index: -1;
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+}

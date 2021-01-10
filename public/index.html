@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" type="image/jpg" href="img/favicon.ico"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiplayer Connect 4</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div class="start-screen">
+    <div class="logo">
+      <p>Simple Multiplayer Connect 4 Game</p>
+    </div>
+    <input type="text" id="player_name" placeholder="Enter Player Name"/>
+    <div class="play-btns">
+      <button id="create-game" class="btn">Create Game</button>
+      <button id="show-rooms" class="btn">Join Game</button>
+    </div>
+  </div>
+  <script src="js/socket.io.js"></script>
+  <script src="js/anime.min.js"></script>
+  <!-- CUSTOM SCRIPTS -->
+  <script src="js/pages/background.js  "></script>
+  <script src="js/pages/nextPlayer.js"></script>
+  <script src="js/pages/startScreen.js"></script>
+  <script src="js/pages/joinGame.js"></script>
+  <script src="js/pages/createGame.js"></script>
+  <script src="js/pages/gameOver.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
