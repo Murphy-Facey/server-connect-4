@@ -1,6 +1,6 @@
 # Multiplayer Connect 4
 
-This is simple static multiplayer connect 4 game built using javascript, HTML & CSS. Before you ask if this could be done using React, Vue or another other front-end framework and would it have been easily ... the answer is yes, 100%. The same thing appies to the efforts taken to add custom styles.
+This is simple multiplayer connect 4 game built using javascript, HTML & CSS. Before you ask if this could be done using React, Vue or another other front-end framework and would it have been easily ... the answer is yes, 100%. The same thing applies to the efforts taken to add custom styles.
 
 ## How to use it
 
