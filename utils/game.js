@@ -21,13 +21,8 @@ function find_last_empty_cell(col, play, ROWS, BOARD) {
 }
 
 function alternate_player(plays, current_play) {
-  var i = plays.indexOf(current_play);
-  if (i < plays.length - 1) {
-    current_play = plays[i + 1];
-  } else {
-    current_play = plays[0];
-  }
-  return current_play;
+  var index = plays.length - plays.indexOf(current_play) + 1;
+  return plays[index];
 }
 
 function color_match_check(one, two, three, four) {
