@@ -11,7 +11,7 @@ npm install
 npm start
 ```
 
-The server should open up at http://localhost:8080. Enter that url into your browser and enjoy the game with friends and family. Please note that this is only for one player (1P) mode and to play with other modes, you will need to tunnel your localhost using ngrok. One player mode justs me you and someone else can play with each other on your current machine.
+The server should open up at http://localhost:8080. Enter that url into your browser and enjoy the game with friends and family. Please note that this is only for one player (1P) mode and to play with other modes, you will need to tunnel your localhost using ngrok. One player mode justs means that you and someone else beside you can play with each other on your current machine.
 
 You can get ngrok and setup it [here](https://ngrok.com/download). Afterwards, you should have a link that looks like this: https://033a3ebe3735.ngrok.io. Share that link with your friend(s)/family and then you can play it with them.
 
