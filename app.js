@@ -23,6 +23,7 @@ io.on('connection', socket => {
       id: socket.room_id,
       players: [socket],
       names: [socket.player_name],
+      is_first_played: true,
       active: false
     };
     socket.join(socket.room_id);
@@ -88,7 +89,9 @@ io.on('connection', socket => {
     const available = room.capacity - room.players.length;
     if (available === 0) {
       room.board = create_game_board(room.board_size[0], room.board_size[1]);
+
       room.current_player = room.colours[0];
+
       io.to(room_id).emit('start-game', {
         board_size: room.board_size,
         current_player: room.current_player,
@@ -101,7 +104,12 @@ io.on('connection', socket => {
           player: room.players[i].player_name
         });
       }
-      alternateTimer(room, room.names[0]);
+
+      if (room.is_first_played)
+        alternateTimer(room, room.names[0]);
+      else
+        alternateTimer(room, room.names[room.names.length - 1]);
+
     } else {
       io.to(room_id).emit('waiting', available);
     }
@@ -119,7 +127,7 @@ io.on('connection', socket => {
 
     io.to(socket.room_id).emit('start-game', {
       board_size: room.board_size,
-      current_player: room.colours[0],
+      current_player: room.current_player,
       players: room.names,
     });
 
@@ -128,6 +136,7 @@ io.on('connection', socket => {
       player: room.names[0]
     });
     alternateTimer(room, room.names[0]);
+    
   });
 
   socket.on('add-player', ({ col, colour }) => {
@@ -198,7 +207,6 @@ io.on('connection', socket => {
         colour: room.current_player,
         player: room.names[room.colours.indexOf(room.current_player)]
       });
-
     } else {
       for (var i in room.players) {
         room.players[i].emit('set-colour', {
@@ -208,23 +216,15 @@ io.on('connection', socket => {
       }
     }
 
-    console.log(room.current_player);
-    let index = room.colours.indexOf(room.current_player);
-    if (index === room.colours.length - 1) {
-      index = 0;
-    } else if (index === 0) {
-      index = room.colours.length - 1;
-    } else {
-      index = index - 1;
-    }
-    console.log(index);
-    alternateTimer(room, room.names[index]);
+    let index_of_last_player = room.colours.length - room.colours.indexOf(room.current_player) - 1;
+    alternateTimer(room, room.names[index_of_last_player]);
   });
 
   socket.on('leave-game', () => {
     let room = GAME_ROOMS[socket.room_id];
+    room.is_first_played = false;
     socket.leave(socket.room_id);
-
+    
     if (room.mode !== 'one-player') {
       let index = room.players.indexOf(socket);
 
@@ -246,7 +246,9 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     let room = GAME_ROOMS[socket.room_id];
+    
     if (room !== undefined) {
+      room.is_first_played = false;
       socket.leave(socket.room_id);
       let index = room.players.indexOf(socket);
 
