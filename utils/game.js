@@ -11,13 +11,13 @@ const create_game_board = (ROWS, COLS) => {
 }
 
 function find_last_empty_cell(col, play, ROWS, BOARD) {
-  for (var i = ROWS - 1; i >= 0; i--)
-    if (BOARD[i][Number(col)] == '-') {
+  for (var i = ROWS - 1; i >= 0; i--)     // starts for the last row of the current column
+    if (BOARD[i][Number(col)] == '-') {   // go up upon you see an empty cell
       var j = Number(col);
-      BOARD[i][j] = play;
-      return { i, j };
+      BOARD[i][j] = play;                 // updates board
+      return { i, j };                    // returns coordinations of the updated cell
     }
-  return null;
+  return null;                            // if there is no empty cell in the column, send nothing
 }
 
 function alternate_player(plays, current_play) {
@@ -28,6 +28,13 @@ function alternate_player(plays, current_play) {
 function color_match_check(one, two, three, four) {
   return (one === two && one === three && one == four && one !== '-');
 }
+
+// the following functions are used to check if player has won in
+// either of the four directions: horizontally, vertically, and 
+// both of the diagonals.
+// Please Note: the rows and cols attributes are used to show the 
+//              winner titles
+
 
 function horizontal_check(ROWS, COLS, BOARD) {
   for (var row = 0; row < ROWS; row++) {

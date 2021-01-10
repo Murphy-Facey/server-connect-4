@@ -10,23 +10,36 @@ app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;
 
+// I needed a variable to tell all the colours and this is that.
 const PLAYER_COLOURS = ['red', 'yellow', 'black', 'green'];
+
+// this stores all the games, basically the temporary database 
 var GAME_ROOMS = {};
-var count = 0;
 
 io.on('connection', socket => {
-
+  
+  // this creates the game for the players after is enters
+  // their names and clicks create game button on the start
+  // page [client side]
   socket.on('create-game', player_name => {
+    
     socket.room_id = shortid.generate();
     socket.player_name = player_name;
+    
     GAME_ROOMS[socket.room_id] = {
-      id: socket.room_id,
-      players: [socket],
-      names: [socket.player_name],
-      is_first_played: true,
-      active: false
+      id: socket.room_id,           // uniquely identifies every game
+      players: [socket],            // list of players (sockets)
+      names: [socket.player_name],  // list of player's names
+      is_first_played: true,        // indicates if the game is played already
+      active: false                 // indicates if game can be viewed in the game room list's
     };
+
+    // this addes the player creating the game to the actual room 
     socket.join(socket.room_id);
+
+    // this changes the client side to the page where
+    // they can enter the rest of  information about
+    // the game [such as name, colour, and mode]
     socket.emit('config-game', PLAYER_COLOURS);
   });
 
@@ -39,22 +52,27 @@ io.on('connection', socket => {
 
   socket.on('game-mode', ({ game_mode, colour, room_name }) => {
     const room = GAME_ROOMS[socket.room_id];
-    room.mode = game_mode;
-    room.name = room_name;
-    room.colours = [colour];
-    room.timer = [];
-
-    room.active = true;
+    
+    room.mode = game_mode;    // this cam be either 'one-player', 'two-player', 'four-player'
+    room.name = room_name;   
+    room.colours = [colour];  
+    room.timer = [];          // stores all the timer function so I can stop them whenever I need to
+    room.active = true;       // show the game in the game room listing
     room.board = [];
+
     if (game_mode === 'one-player') {
       room.capacity = 1;
       room.board_size = [6, 7];
       room.times = [0, 0];
-      socket.emit('next-player');
+      // this gets name of the next player 
+      socket.emit('next-player');           
     } else if (game_mode === 'two-player') {
       room.capacity = 2;
       room.board_size = [6, 7];
       room.times = [0, 0];
+      // this changes the client side to the waiting
+      // screen which tell how many player are left
+      // for the game to start
       socket.emit('waiting', 1);
     } else if (game_mode === 'four-player') {
       room.capacity = 4;
@@ -70,6 +88,8 @@ io.on('connection', socket => {
 
   socket.on('show-rooms', player_name => {
     socket.player_name = player_name;
+
+    // this sends all the information about the active games to the client side
     socket.emit('view-rooms', {
       rooms: filter_rooms_info(GAME_ROOMS),
       colours: free_colours(GAME_ROOMS, PLAYER_COLOURS)
@@ -77,16 +97,19 @@ io.on('connection', socket => {
   });
 
   socket.on('join-game', ({ room_id, colour }) => {
-    socket.room_id = room_id;
+    socket.room_id = room_id;           // gives the other players the room's id
     const room = GAME_ROOMS[room_id];
 
     room.colours.push(colour);
     room.players.push(socket);
     room.names.push(socket.player_name);
-
     room.leaderboard = {};
+
     socket.join(room_id);
+    
     const available = room.capacity - room.players.length;
+    
+    // there are no nore players 
     if (available === 0) {
       room.board = create_game_board(room.board_size[0], room.board_size[1]);
 
@@ -115,30 +138,39 @@ io.on('connection', socket => {
     }
   });
 
+  // this takes name of the next player in the 1P mode and
+  // adds to game and then starts it
   socket.on('add-next-player', next_player_name => {
     const room = GAME_ROOMS[socket.room_id];
     const other_colour = (room.colours[0] === PLAYER_COLOURS[0]) ? PLAYER_COLOURS[1] : PLAYER_COLOURS[0];
 
+    // the following lines adds the player's information to the selected game
     room.names.push(next_player_name);
     room.current_player = room.colours[0];
     room.colours.push(other_colour);
+
     room.board = create_game_board(room.board_size[0], room.board_size[1]);
     room.leaderboard = {};
 
+    // this set ups the board on the client side for all players
     io.to(socket.room_id).emit('start-game', {
       board_size: room.board_size,
       current_player: room.current_player,
       players: room.names,
     });
 
+    // this adds their names and their corresponding colours
     socket.emit('set-colour', {
       colour: room.colours[0],
       player: room.names[0]
     });
+
+    // this starts the first player's timer immediately when the game begins.
     alternate_timer(room, room.names[0]);
-    
   });
 
+  // this basically serves as the game loop and handles all the logical
+  // stuff in regards to the next player and moves ... etc. 
   socket.on('add-player', ({ col, colour }) => {
     const room = GAME_ROOMS[socket.room_id];
     var play = colour;
