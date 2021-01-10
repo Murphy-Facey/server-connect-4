@@ -10,7 +10,7 @@ const create_game_board = (ROWS, COLS) => {
   return rows;
 }
 
-function findLastEmptyCell(col, play, ROWS, BOARD) {
+function find_last_empty_cell(col, play, ROWS, BOARD) {
   for (var i = ROWS - 1; i >= 0; i--)
     if (BOARD[i][Number(col)] == '-') {
       var j = Number(col);
@@ -20,7 +20,7 @@ function findLastEmptyCell(col, play, ROWS, BOARD) {
   return null;
 }
 
-function alternatePlayer(plays, current_play) {
+function alternate_player(plays, current_play) {
   var i = plays.indexOf(current_play);
   if (i < plays.length - 1) {
     current_play = plays[i + 1];
@@ -30,14 +30,14 @@ function alternatePlayer(plays, current_play) {
   return current_play;
 }
 
-function colorMatchCheck(one, two, three, four) {
+function color_match_check(one, two, three, four) {
   return (one === two && one === three && one == four && one !== '-');
 }
 
-function horizontalCheck(ROWS, COLS, BOARD) {
+function horizontal_check(ROWS, COLS, BOARD) {
   for (var row = 0; row < ROWS; row++) {
     for (var col = 0; col < COLS - 3; col++) {
-      if (colorMatchCheck(
+      if (color_match_check(
         BOARD[row][col],
         BOARD[row][col + 1],
         BOARD[row][col + 2],
@@ -56,10 +56,10 @@ function horizontalCheck(ROWS, COLS, BOARD) {
   };
 }
 
-function verticalCheck(ROWS, COLS, BOARD) {
+function vertical_check(ROWS, COLS, BOARD) {
   for (var col = 0; col < COLS; col++) {
     for (var row = 0; row < ROWS - 3; row++) {
-      if (colorMatchCheck(
+      if (color_match_check(
         BOARD[row][col],
         BOARD[row + 1][col],
         BOARD[row + 2][col],
@@ -78,10 +78,10 @@ function verticalCheck(ROWS, COLS, BOARD) {
   };
 }
 
-function diagonalCheck1(ROWS, COLS, BOARD) {
+function diagonal_check_1(ROWS, COLS, BOARD) {
   for (var col = 0; col < COLS - 3; col++) {
     for (var row = 0; row < ROWS - 3; row++) {
-      if (colorMatchCheck(
+      if (color_match_check(
         BOARD[row][col],
         BOARD[row + 1][col + 1],
         BOARD[row + 2][col + 2],
@@ -100,10 +100,10 @@ function diagonalCheck1(ROWS, COLS, BOARD) {
   };
 }
 
-function diagonalCheck2(ROWS, COLS, BOARD) {
+function diagonal_check_2(ROWS, COLS, BOARD) {
   for (var col = 0; col < COLS - 3; col++) {
     for (var row = ROWS - 1; row > 3; row--) {
-      if (colorMatchCheck(
+      if (color_match_check(
         BOARD[row][col],
         BOARD[row - 1][col + 1],
         BOARD[row - 2][col + 2],
@@ -124,10 +124,10 @@ function diagonalCheck2(ROWS, COLS, BOARD) {
 
 module.exports = {
   create_game_board,
-  findLastEmptyCell,
-  alternatePlayer,
-  verticalCheck,
-  horizontalCheck,
-  diagonalCheck1,
-  diagonalCheck2,
+  find_last_empty_cell,
+  alternate_player,
+  vertical_check,
+  horizontal_check,
+  diagonal_check_1,
+  diagonal_check_2,
 };

@@ -5,7 +5,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server, {});
 // ----------------------------------------------
 const { filter_rooms_info, free_colours } = require('./utils/utils');
-const { create_game_board, findLastEmptyCell, alternatePlayer, verticalCheck, horizontalCheck, diagonalCheck1, diagonalCheck2, filter_player_name } = require('./utils/game');
+const { create_game_board, find_last_empty_cell, alternate_player, vertical_check, horizontal_check, diagonal_check_1, diagonal_check_2, filter_player_name } = require('./utils/game');
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;
@@ -106,9 +106,9 @@ io.on('connection', socket => {
       }
 
       if (room.is_first_played)
-        alternateTimer(room, room.names[0]);
+        alternate_timer(room, room.names[0]);
       else
-        alternateTimer(room, room.names[room.names.length - 1]);
+        alternate_timer(room, room.names[room.names.length - 1]);
 
     } else {
       io.to(room_id).emit('waiting', available);
@@ -135,7 +135,7 @@ io.on('connection', socket => {
       colour: room.colours[0],
       player: room.names[0]
     });
-    alternateTimer(room, room.names[0]);
+    alternate_timer(room, room.names[0]);
     
   });
 
@@ -144,16 +144,16 @@ io.on('connection', socket => {
     var play = colour;
 
     if (play === room.current_player) {
-      const coords = findLastEmptyCell(col, play, room.board_size[0], room.board);
+      const coords = find_last_empty_cell(col, play, room.board_size[0], room.board);
 
       if (coords !== null) {
         io.to(socket.room_id).emit('update-board', { coords: coords, play: play });
 
         let game_over_states = [
-          horizontalCheck(room.board_size[0], room.board_size[1], room.board),
-          verticalCheck(room.board_size[0], room.board_size[1], room.board),
-          diagonalCheck1(room.board_size[0], room.board_size[1], room.board),
-          diagonalCheck2(room.board_size[0], room.board_size[1], room.board)
+          horizontal_check(room.board_size[0], room.board_size[1], room.board),
+          vertical_check(room.board_size[0], room.board_size[1], room.board),
+          diagonal_check_1(room.board_size[0], room.board_size[1], room.board),
+          diagonal_check_2(room.board_size[0], room.board_size[1], room.board)
         ];
 
         let is_game_over = game_over_states.find((check) => { return check.success });
@@ -162,8 +162,8 @@ io.on('connection', socket => {
           reset_timer(room);
           io.to(socket.room_id).emit('game-over', { winner: play, rows: is_game_over.rows, cols: is_game_over.cols });
         } else {
-          alternateTimer(room, room.names[room.colours.indexOf(colour)]);
-          room.current_player = alternatePlayer(room.colours, play);
+          alternate_timer(room, room.names[room.colours.indexOf(colour)]);
+          room.current_player = alternate_player(room.colours, play);
           io.to(socket.room_id).emit('change-current', room.current_player);
 
           if (room.mode === 'one-player') {
@@ -217,7 +217,7 @@ io.on('connection', socket => {
     }
 
     let index_of_last_player = room.colours.length - room.colours.indexOf(room.current_player) - 1;
-    alternateTimer(room, room.names[index_of_last_player]);
+    alternate_timer(room, room.names[index_of_last_player]);
   });
 
   socket.on('leave-game', () => {
@@ -269,7 +269,7 @@ io.on('connection', socket => {
 function reset_timer(room) {
   for (var i in room.times) {
     room.times[i] = 0;
-    stopTimer(room.timer[i]);
+    stop_timer(room.timer[i]);
   }
 }
 
@@ -294,31 +294,31 @@ function tick(ROOM, index) {
   }
 }
 
-function alternateTimer(ROOM, player) {
+function alternate_timer(ROOM, player) {
   let i = ROOM.names.indexOf(player);
   if (ROOM.timer.length !== 0) {
-    stopTimer(ROOM.timer[i]);
+    stop_timer(ROOM.timer[i]);
     i++;
     if (ROOM.timer.length < ROOM.times.length) {
-      ROOM.timer.push(startTimer(ROOM, i));
+      ROOM.timer.push(start_timer(ROOM, i));
     } else {
       if (i === ROOM.timer.length) {
-        ROOM.timer[0] = startTimer(ROOM, 0);
+        ROOM.timer[0] = start_timer(ROOM, 0);
       } else {
-        ROOM.timer[i] = startTimer(ROOM, i);
+        ROOM.timer[i] = start_timer(ROOM, i);
       }
     }
   } else {
-    ROOM.timer.push(startTimer(ROOM, i));
+    ROOM.timer.push(start_timer(ROOM, i));
   }
 }
 
-function startTimer(ROOM, index) {
+function start_timer(ROOM, index) {
   timer = setInterval(tick, 1, ROOM, index);
   return timer;
 }
 
-function stopTimer(timer) {
+function stop_timer(timer) {
   clearInterval(timer);
 }
 
