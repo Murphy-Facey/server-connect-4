@@ -15,7 +15,7 @@ The server should open up at http://localhost:8080. Enter that url into your bro
 
 ## Frameworks used
 
-For those who would like to know, these are a list of frameworks/packages that I used in this project.
+For those who would like to know, this is a list of frameworks/packages that I used in this project.
 - Express
 - Socket.io 
 - Shortid
