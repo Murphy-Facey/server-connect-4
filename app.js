@@ -121,6 +121,7 @@ io.on('connection', socket => {
         players: room.names
       });
 
+      // this adds player's names and their corresponding colours
       for (var i in room.players) {
         room.players[i].emit('set-colour', {
           colour: room.colours[i],
@@ -128,7 +129,10 @@ io.on('connection', socket => {
         });
       }
 
+      // I needed to adjust for players that left the game and re-enter it
+      // so if this is the first game ...
       if (room.is_first_played)
+        // ...
         alternate_timer(room, room.names[0]);
       else
         alternate_timer(room, room.names[room.names.length - 1]);
@@ -159,7 +163,7 @@ io.on('connection', socket => {
       players: room.names,
     });
 
-    // this adds their names and their corresponding colours
+    // this adds current player's names and their corresponding colour
     socket.emit('set-colour', {
       colour: room.colours[0],
       player: room.names[0]
@@ -198,6 +202,7 @@ io.on('connection', socket => {
           room.current_player = alternate_player(room.colours, play);
           io.to(socket.room_id).emit('change-current', room.current_player);
 
+          // this is to update the name and colour to the next player [1P onlu]
           if (room.mode === 'one-player') {
             let index = (colour === room.colours[0]) ? 1 : 0;
             socket.emit('set-colour', {
@@ -212,6 +217,9 @@ io.on('connection', socket => {
 
   socket.on('update-streak', winner => {
     const room = GAME_ROOMS[socket.room_id];
+    
+    // if this is not the first game won, increase the player's streak
+    // else initialize the leaderboard an set the first winning streak
     if (JSON.stringify(room.leaderboard) != JSON.stringify({})) {
       room.leaderboard[room.names[room.colours.indexOf(winner)]] += 1;
     } else {
@@ -220,7 +228,8 @@ io.on('connection', socket => {
       }
       room.leaderboard[room.names[room.colours.indexOf(winner)]] = 1;
     }
-    console.log(room.leaderboard);
+    
+    // this sends the leaderboard to the client side
     io.to(socket.room_id).emit('leaderboard', room.leaderboard);
   });
 
@@ -306,7 +315,12 @@ function reset_timer(room) {
 }
 
 function tick(ROOM, index) {
+  // this is the elapsed time basically
   ROOM.times[index]++;
+
+  // ... by using modulus (remainder) and division
+  // the time can be separated into hrs, mins, and
+  // secs
   var remain = ROOM.times[index];
   var mins = Math.floor(remain / 6000);
   remain -= mins * 6000;
@@ -314,11 +328,19 @@ function tick(ROOM, index) {
   remain -= secs * 100;
   var millis = remain;
 
+  // these turnaru functions fix the problems having 
+  // single digits in the timer 
   mins = (mins < 10) ? `0${mins}` : mins;
   secs = (secs < 10) ? `0${secs}` : secs;
   millis = (millis < 10) ? `0${millis}` : millis;
+  
+  // set up current time 
   ROOM.current_time = `${mins} : ${secs} : ${millis}`;
+
+  // checks if players are still playing the game 
   if (ROOM.players[0] !== undefined) {
+    
+    // if they are, update their timer
     io.to(ROOM.players[0].room_id).emit('update-time', {
       time: ROOM.current_time,
       play: ROOM.names[index]
@@ -328,12 +350,21 @@ function tick(ROOM, index) {
 
 function alternate_timer(ROOM, player) {
   let i = ROOM.names.indexOf(player);
+
+  // if the timer is not empty, 
   if (ROOM.timer.length !== 0) {
+    // stop the preview timer 
     stop_timer(ROOM.timer[i]);
     i++;
+    
+    // then check if the other timers exists,
     if (ROOM.timer.length < ROOM.times.length) {
+      
+      // if not add a new timer to the timer array
       ROOM.timer.push(start_timer(ROOM, i));
     } else {
+      
+      // otherwise, start the next timer
       if (i === ROOM.timer.length) {
         ROOM.timer[0] = start_timer(ROOM, 0);
       } else {
@@ -341,6 +372,7 @@ function alternate_timer(ROOM, player) {
       }
     }
   } else {
+    // ... else add the first timer [Please note: this timer is always player 1] 
     ROOM.timer.push(start_timer(ROOM, i));
   }
 }
