@@ -21,7 +21,7 @@ function find_last_empty_cell(col, play, ROWS, BOARD) {
 }
 
 function alternate_player(plays, current_play) {
-  var index = plays.length - plays.indexOf(current_play) + 1;
+  var index = (plays.indexOf(current_play) + 1) % plays.length;
   return plays[index];
 }
 

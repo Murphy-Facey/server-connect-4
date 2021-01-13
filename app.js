@@ -30,6 +30,7 @@ io.on('connection', socket => {
       id: socket.room_id,           // uniquely identifies every game
       players: [socket],            // list of players (sockets)
       names: [socket.player_name],  // list of player's names
+      ids: [shortid.generate()],    // list of player's id
       is_first_played: true,        // indicates if the game is played already
       active: false                 // indicates if game can be viewed in the game room list's
     };
@@ -103,6 +104,7 @@ io.on('connection', socket => {
     room.colours.push(colour);
     room.players.push(socket);
     room.names.push(socket.player_name);
+    room.ids.push(shortid.generate());
     room.leaderboard = {};
 
     socket.join(room_id);
@@ -118,7 +120,10 @@ io.on('connection', socket => {
       io.to(room_id).emit('start-game', {
         board_size: room.board_size,
         current_player: room.current_player,
-        players: room.names
+        player: {
+          names: room.names,
+          ids: room.ids
+        }
       });
 
       // this adds player's names and their corresponding colours
@@ -133,9 +138,9 @@ io.on('connection', socket => {
       // so if this is the first game ...
       if (room.is_first_played)
         // ...
-        alternate_timer(room, room.names[0]);
+        alternate_timer(room, room.ids[0]);
       else
-        alternate_timer(room, room.names[room.names.length - 1]);
+        alternate_timer(room, room.ids[room.ids.length - 1]);
 
     } else {
       io.to(room_id).emit('waiting', available);
@@ -150,6 +155,7 @@ io.on('connection', socket => {
 
     // the following lines adds the player's information to the selected game
     room.names.push(next_player_name);
+    room.ids.push(shortid.generate());
     room.current_player = room.colours[0];
     room.colours.push(other_colour);
 
@@ -160,7 +166,10 @@ io.on('connection', socket => {
     io.to(socket.room_id).emit('start-game', {
       board_size: room.board_size,
       current_player: room.current_player,
-      players: room.names,
+      player: {
+        names: room.names,
+        ids: room.ids
+      },
     });
 
     // this adds current player's names and their corresponding colour
@@ -170,7 +179,7 @@ io.on('connection', socket => {
     });
 
     // this starts the first player's timer immediately when the game begins.
-    alternate_timer(room, room.names[0]);
+    alternate_timer(room, room.ids[0]);
   });
 
   // this basically serves as the game loop and handles all the logical
@@ -178,7 +187,6 @@ io.on('connection', socket => {
   socket.on('add-player', ({ col, colour }) => {
     const room = GAME_ROOMS[socket.room_id];
     var play = colour;
-
     if (play === room.current_player) {
       const coords = find_last_empty_cell(col, play, room.board_size[0], room.board);
 
@@ -198,8 +206,10 @@ io.on('connection', socket => {
           reset_timer(room);
           io.to(socket.room_id).emit('game-over', { winner: play, rows: is_game_over.rows, cols: is_game_over.cols });
         } else {
-          alternate_timer(room, room.names[room.colours.indexOf(colour)]);
+          let index = room.colours.indexOf(colour);
+          alternate_timer(room, room.ids[index]);
           room.current_player = alternate_player(room.colours, play);
+          console.log(room.current_player);
           io.to(socket.room_id).emit('change-current', room.current_player);
 
           // this is to update the name and colour to the next player [1P onlu]
@@ -240,7 +250,10 @@ io.on('connection', socket => {
     io.to(socket.room_id).emit('start-game', {
       board_size: room.board_size,
       current_player: room.current_player,
-      players: room.names
+      player: {
+        names:room.names,
+        ids: room.ids
+    }
     });
 
     if (room.mode === 'one-player') {
@@ -258,7 +271,7 @@ io.on('connection', socket => {
     }
 
     let index_of_last_player = room.colours.length - room.colours.indexOf(room.current_player) - 1;
-    alternate_timer(room, room.names[index_of_last_player]);
+    alternate_timer(room, room.ids[index_of_last_player]);
   });
 
   socket.on('leave-game', () => {
@@ -343,13 +356,13 @@ function tick(ROOM, index) {
     // if they are, update their timer
     io.to(ROOM.players[0].room_id).emit('update-time', {
       time: ROOM.current_time,
-      play: ROOM.names[index]
+      id: ROOM.ids[index]
     });
   }
 }
 
-function alternate_timer(ROOM, player) {
-  let i = ROOM.names.indexOf(player);
+function alternate_timer(ROOM, player_id) {
+  let i = ROOM.ids.indexOf(player_id);
 
   // if the timer is not empty, 
   if (ROOM.timer.length !== 0) {

@@ -113,19 +113,21 @@ socket.on('next-player', () => {
 
 socket.on('waiting', available => {
   let body = document.querySelector('body');
-  body.innerHTML = '<canvas id="c"></canvas>';
+  body.innerHTML = '';
   body.append(GAME);
   GAME.classList.remove('blurred');
 
   GAME.innerHTML = `<p>Waiting: ${available}</p>`;
 });
 
-socket.on('start-game', ({ board_size, current_player, players }) => {
+socket.on('start-game', ({ board_size, current_player, player }) => {
   GAME_OVER = false;
+
+  console.log(player);
 
   let body = document.querySelector('body');
 
-  body.innerHTML = '<canvas id="c"></canvas>';
+  body.innerHTML = '';
   body.append(GAME);
 
   if (GAME.classList.contains('game-board')) {
@@ -176,9 +178,9 @@ socket.on('start-game', ({ board_size, current_player, players }) => {
 
   GAME.append(board_container);
   GAME.innerHTML += "<div id='timer'></div>";
-  for (var player of players) {
+  for (var i in player.names) {
     document.getElementById('timer').innerHTML += `
-      <p>${player}: <span id='time-${player}' class='times'>00 : 00 : 00</span></p>
+      <p>${player.names[i]}: <span id='${player.ids[i]}' class='times'>00 : 00 : 00</span></p>
     `;
   }
   handle_input();
@@ -252,8 +254,8 @@ socket.on('set-colour', ({ colour, player }) => {
   PLAYER_COLOUR = colour;
 });
 
-socket.on('update-time', ({ time, play }) => {
-  const current_timer = document.getElementById(`time-${play}`)
+socket.on('update-time', ({ time, id }) => {
+  const current_timer = document.getElementById(`${id}`)
   current_timer.textContent = time;
 
   if (document.querySelector('.active') !== null) {
@@ -269,7 +271,7 @@ socket.on('start-screen', () => {
 
 function create_start_screen() {
   let body = document.querySelector('body');
-  body.innerHTML = '<canvas id="c"></canvas>';
+  body.innerHTML = '';
   body.append(GAME);
   GAME.classList.remove('game-board');
   GAME.classList.remove('blurred');
