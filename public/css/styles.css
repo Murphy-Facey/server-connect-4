@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap');
+
+:root {
+  --dark-blue: #1C4670;
+  --blue: #278AB0;
+  --light-grey: #EAEAE0;
+  --accent-green: #1DC690;
+}
 
 * {
   padding: 0px;
@@ -9,31 +17,57 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Poppins', sans-serif;
+  background-color: #8EC5FC;
+  background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+
 }
 
 /* ------------ START PAGE ------------ */
+
 .start-screen {
   width: 700px;
   height: 500px;
-  background-color: burlywood;
-  border-radius: 20px;
+  background-color: var(--blue);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.logo {
+  font-size: 28px;
+}
+
+.instructions {
+  width: calc(90% - 20px);
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: var(--dark-blue);
+  color: var(--light-grey);
+  border-radius: 15px;
+}
+
+.instructions span {
+  font-weight: 900;
+  color: var(--accent-green);
+  letter-spacing: 2px;
+}
+
 #player_name {
-  width: 80%;
+  width: 90%;
   height: 55px;
   font-size: 1.2em;
   text-align: center;
   outline: none;
   border: none;
+  font-family: 'Poppins';
+  color: var(--dark-blue)
 }
 
 .play-btns {
-  width: 80%;
+  width: 90%;
   display: flex;
   align-self: center;
   justify-content: space-between;
@@ -44,6 +78,17 @@ body {
   width: 45%;
   height: 55px;
   font-size: 1.2em;
+  border: 0;
+  border-radius: 5px;
+  font-family: 'Poppins';
+  outline: none;
+  background-color: var(--accent-green);
+  color: var(--dark-blue);
+}
+
+.play-btns button:hover {
+  background-color: var(--dark-blue);
+  color: var(--accent-green);
 }
 
 /* ------------------------------------ */
