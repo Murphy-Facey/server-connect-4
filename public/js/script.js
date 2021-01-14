@@ -128,8 +128,6 @@ socket.on('waiting', available => {
 socket.on('start-game', ({ board_size, current_player, player }) => {
   GAME_OVER = false;
 
-  console.log(player);
-
   let body = document.querySelector('body');
 
   body.innerHTML = '';
@@ -310,7 +308,6 @@ function handle_input() {
     col.addEventListener('click', () => {
       if (GAME_OVER)
         return;
-      console.log(PLAYER_COLOUR);
       socket.emit('add-player', {
         col: col.querySelector('.row').getAttribute('data-col'),
         colour: PLAYER_COLOUR
