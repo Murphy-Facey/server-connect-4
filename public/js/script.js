@@ -227,7 +227,7 @@ socket.on('game-over', ({ winner, rows, cols }) => {
     socket.emit('update-streak', winner);
 });
 
-socket.on('leaderboard', leaderboard => {
+socket.on('leaderboard', ({leaderboard, ids}) => {
   create_leaderboard(
     document.getElementById('leaderboard'),
     Object.keys(leaderboard),

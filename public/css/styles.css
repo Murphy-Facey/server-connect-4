@@ -14,9 +14,6 @@
 
 body {
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-family: 'Poppins', sans-serif;
   background-color: #8EC5FC;
   background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
@@ -46,10 +43,22 @@ body {
   color: var(--accent-green);
 }
 
-.sp-bn {
+.sp-bn, .ce-ce {
   display: flex;
+}
+
+.sp-bn {
   align-items: center;
   justify-content: space-between;
+}
+
+.ce-ce {
+  align-items: center;
+  justify-content: center;
+}
+
+.fl-col {
+  flex-direction: column;
 }
 
 /* ------------ START PAGE ------------ */
@@ -59,10 +68,6 @@ body {
   height: 500px;
   background-color: var(--blue);
   border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .logo {
@@ -157,16 +162,12 @@ body {
 }
 
 .colour-div {
-  display: flex;
-  
   height: auto;
   width: 90%;
   padding-top: 5px;
   padding-bottom: 5px;
   border-radius: 5px;
   background-color: var(--dark-blue);
-  flex-direction: column;
-  align-items: center;
 }
 
 .colour-div p {
@@ -182,9 +183,6 @@ body {
 
 .colour {
   height: 52px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border: 3px solid transparent;
   border-radius: 50%;
   padding: 4px;
@@ -205,7 +203,7 @@ body {
 /* ------------------------------------ */
 
 .join-board {
-  width: 700px;
+  width: 500px;
   height: 500px;
   background-color: aquamarine;
 }
@@ -248,7 +246,7 @@ body {
 
 .available-colours > div {
   padding: 2px;
-  border: 2px solid black;
+  border: 2px solid transparent;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -489,9 +487,10 @@ body {
 
 #game_over {
   position: absolute;
-  width: 500px;
+  width: 640px;
   height: 400px;
-  background-color: aqua;
+  border-radius: 10px;
+  background-color: var(--blue);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -499,47 +498,42 @@ body {
 }
 
 #leaderboard {
-  background-color: blueviolet;
   width: 90%;
+  max-height: 236.8px;
+  border-radius: 5px;
+  overflow-y: auto;
+  background-color: var(--dark-blue);
   padding: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
   font-size: 20px;
-}
-
-#leaderboard * {
-  margin: 0px;
 }
 
 #leaderboard h6 {
   font-size: 16px;
-  color: white;
+  color: var(--light-grey);
   letter-spacing: 5px;
   position: relative;
 }
 
-#leaderboard h6::before {
+#leaderboard h6::before,
+#leaderboard h6::after {
   content: '';
-  position: absolute;
-  top: 50%;
-  left: -60%;
-  transform: translateY(-50%);
   width: 100px;
   height: 2px;
-  background-color: white;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--accent-green);
+}
+
+#leaderboard h6::before {
+  left: -60%;
 }
 
 #leaderboard h6::after {
-  content: '';
-  position: absolute;
-  top: 50%;
   left: 101%;
-  transform: translateY(-50%);
-  width: 100px;
-  height: 2px;
-  background-color: white;
 }
 
 #leaderboard p {
@@ -549,16 +543,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: burlywood;
+  background-color: var(--blue);
+  color: var(--light-grey);
   margin-top: 10px;
   border-radius: 5px;
 }
 
 #leaderboard span {
   border-radius: 3px;
-  font-weight: bolder;
+  font-weight: bold;
   padding: 5px 20px;
-  background-color: chartreuse;
+  background-color: var(--dark-blue);
+  color: var(--accent-green);
 }
 
 .winner-title {
@@ -574,15 +570,7 @@ body {
   justify-content: space-between;
 }
 
-.over-btns button {
-  height: 40px;
-  width: 30%;
-  border: none;
-  font-size: 16px;
-  border-radius: 5px;
-  background-color: blueviolet;
-  color: white;
-}
+
 
 #game_over.hide {
   display: none;

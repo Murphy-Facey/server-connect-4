@@ -15,6 +15,7 @@ const PLAYER_COLOURS = ['red', 'yellow', 'black', 'green'];
 
 // this stores all the games, basically the temporary database 
 var GAME_ROOMS = {};
+var PLAYERS = [];
 
 io.on('connection', socket => {
   
@@ -34,6 +35,12 @@ io.on('connection', socket => {
       is_first_played: true,        // indicates if the game is played already
       active: false                 // indicates if game can be viewed in the game room list's
     };
+
+    PLAYERS.push({
+      id: GAME_ROOMS[socket.room_id].ids[0],
+      name: socket.player_name,
+      streak: 0
+    });
 
     // this addes the player creating the game to the actual room 
     socket.join(socket.room_id);
@@ -105,7 +112,12 @@ io.on('connection', socket => {
     room.players.push(socket);
     room.names.push(socket.player_name);
     room.ids.push(shortid.generate());
-    room.leaderboard = {};
+
+    PLAYERS.push({
+      id: room.ids[room.ids.length - 1],
+      name: socket.player_name,
+      streak: 0
+    });
 
     socket.join(room_id);
     
@@ -159,9 +171,14 @@ io.on('connection', socket => {
     room.current_player = room.colours[0];
     room.colours.push(other_colour);
 
-    room.board = create_game_board(room.board_size[0], room.board_size[1]);
-    room.leaderboard = {};
+    PLAYERS.push({
+      id: room.ids[room.ids.length - 1],
+      name: next_player_name,
+      streak: 0
+    });
 
+    room.board = create_game_board(room.board_size[0], room.board_size[1]);
+    
     // this set ups the board on the client side for all players
     io.to(socket.room_id).emit('start-game', {
       board_size: room.board_size,
@@ -187,6 +204,9 @@ io.on('connection', socket => {
   socket.on('add-player', ({ col, colour }) => {
     const room = GAME_ROOMS[socket.room_id];
     var play = colour;
+
+    console.log(PLAYERS);
+
     if (play === room.current_player) {
       const coords = find_last_empty_cell(col, play, room.board_size[0], room.board);
 
@@ -230,21 +250,13 @@ io.on('connection', socket => {
     
     // if this is not the first game won, increase the player's streak
     // else initialize the leaderboard an set the first winning streak
-    if (JSON.stringify(room.leaderboard) != JSON.stringify({})) {
-      room.leaderboard[room.ids[room.colours.indexOf(winner)]].streak += 1;
-    } else {
-      for (var i in room.ids) {
-        room.leaderboard[room.ids[i]] = {
-          name: room.names[i],
-          streak: 0
-        };
-      }
-      room.leaderboard[room.ids[room.colours.indexOf(winner)]].streak = 1;
-    }
+    PLAYERS.find((player) => player.id === room.ids[room.colours.indexOf(winner)]).streak += 1;
     
-    console.log(room.leaderboard);
     // this sends the leaderboard to the client side
-    io.to(socket.room_id).emit('leaderboard', room.leaderboard);
+    io.to(socket.room_id).emit('leaderboard', {
+      leaderboard: PLAYERS.sort((a, b) => b.streak - a.streak),
+      ids: room.ids
+    });
   });
 
   socket.on('restart-game', () => {
@@ -289,6 +301,10 @@ io.on('connection', socket => {
       room.players.splice(index, 1);
       room.names.splice(index, 1);
       room.colours.splice(index, 1);
+      
+      PLAYERS.splice(PLAYERS.findIndex(player => player.id === room.ids[index]), 1);
+      room.ids.splice(index, 1);
+
 
       if (room.players.length !== 0) {
         let remaining = room.capacity - room.names.length;
@@ -297,6 +313,9 @@ io.on('connection', socket => {
         delete GAME_ROOMS[socket.room_id];
       }
     } else {
+      for(var id of room.ids) {
+        PLAYERS.splice(PLAYERS.findIndex(player => player.id === id), 1);
+      }
       delete GAME_ROOMS[socket.room_id];
     }
     socket.emit('start-screen');
@@ -306,12 +325,23 @@ io.on('connection', socket => {
     let room = GAME_ROOMS[socket.room_id];
     
     if (room !== undefined) {
+      
       room.is_first_played = false;
       socket.leave(socket.room_id);
       let index = room.players.indexOf(socket);
       
       room.players.splice(index, 1);
       room.names.splice(index, 1);
+      
+      if(room.mode === 'one-player') {
+        for(var id of room.ids) {
+          PLAYERS.splice(PLAYERS.findIndex(player => player.id === id), 1);
+        }
+      } else {
+        PLAYERS.splice(PLAYERS.findIndex(player => player.id === room.ids[index]), 1);
+      }
+      
+      room.ids.splice(index, 1);
 
       if(room.colours !== undefined)
         room.colours.splice(index, 1);

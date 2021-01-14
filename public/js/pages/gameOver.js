@@ -6,9 +6,9 @@ function game_over_screen(game_board, winner) {
 			<h6>LEADERBOARD</h6>
 		</div>
 		<div class='over-btns'>
-			<button id='restart'>Restart Game</button>
-			<button id='hide-btn'>Show Board</button>
-			<button id='leave'>Leave Game</button>
+			<button id='restart' class='big-btn'>Restart Game</button>
+			<button id='hide-btn' class='big-btn'>Show Board</button>
+			<button id='leave' class='big-btn'>Leave Game</button>
 		</div>
 	</div>
   	`;
@@ -17,7 +17,7 @@ function game_over_screen(game_board, winner) {
 function create_leaderboard(leaderboard_div,ids, leaderboard) {
 	for(var id of ids) {
 		leaderboard_div.innerHTML += `
-			<p> ${leaderboard[id].name}: <span>${leaderboard[id].streak}</span></p>
+			<p>${leaderboard[id].name} <span>${leaderboard[id].streak}</span></p>
 		`;
 	}
 }
