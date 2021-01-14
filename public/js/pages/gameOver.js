@@ -14,10 +14,10 @@ function game_over_screen(game_board, winner) {
   	`;
 }
 
-function create_leaderboard(leaderboard_div, names, leaderboard) {
-	for(var name of names) {
+function create_leaderboard(leaderboard_div,ids, leaderboard) {
+	for(var id of ids) {
 		leaderboard_div.innerHTML += `
-			<p> ${name}: <span>${leaderboard[name]}</span></p>
+			<p> ${leaderboard[id].name}: <span>${leaderboard[id].streak}</span></p>
 		`;
 	}
 }

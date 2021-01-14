@@ -20,16 +20,45 @@ body {
   font-family: 'Poppins', sans-serif;
   background-color: #8EC5FC;
   background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+}
 
+/* ------------------------------------ */
+/* ----------- GLOBAL STYLES ---------- */
+/* ------------------------------------ */
+
+.big-btn {
+  height: 55px;
+  width: 181.44px;
+
+  font-size: 19.2px;
+  font-family: 'Poppins';
+  
+  border: 0;
+  border-radius: 5px;
+  outline: none;
+
+  background-color: var(--accent-green);
+  color: var(--dark-blue);
+}
+
+.big-btn:hover {
+  background-color: var(--dark-blue);
+  color: var(--accent-green);
+}
+
+.sp-bn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* ------------ START PAGE ------------ */
 
-.start-screen {
-  width: 700px;
+.start-screen, .game-board {
+  width: 500px;
   height: 500px;
   background-color: var(--blue);
-  border-radius: 10px;
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,7 +66,7 @@ body {
 }
 
 .logo {
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .instructions {
@@ -46,7 +75,9 @@ body {
   margin-bottom: 15px;
   background-color: var(--dark-blue);
   color: var(--light-grey);
-  border-radius: 15px;
+  border-radius: 10px;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .instructions span {
@@ -68,48 +99,18 @@ body {
 
 .play-btns {
   width: 90%;
-  display: flex;
-  align-self: center;
-  justify-content: space-between;
   padding-top: 15px;
-}
-
-.play-btns button {
-  width: 45%;
-  height: 55px;
-  font-size: 1.2em;
-  border: 0;
-  border-radius: 5px;
-  font-family: 'Poppins';
-  outline: none;
-  background-color: var(--accent-green);
-  color: var(--dark-blue);
-}
-
-.play-btns button:hover {
-  background-color: var(--dark-blue);
-  color: var(--accent-green);
 }
 
 /* ------------------------------------ */
 /* ------------ CREATE PAGE ----------- */
 /* ------------------------------------ */
 
-.game-board {
-  width: 500px;
-  height: 500px;
-  background-color: aqua;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.info-div {
+  width: 90%;
 }
 
-.game-board > div {
-  width: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.info-div p {
   font-size: 1.5em;
 }
 
@@ -121,12 +122,8 @@ body {
   margin-top: 10px;
 }
 
-#room-name, .mode-btns {
-  border-radius: 5px;
-  height: 65%;
-}
-
-#room-name {
+.text-box {
+  height: 42px;
   width: 57%;
   border: none;
   outline: none;
@@ -135,39 +132,47 @@ body {
 }
 
 .inner-div, .colour-div {
-    width: 60%;
+  width: 60%;
 }
 
 .inner-div {
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .mode-btns {
-  width: 60px;
-  font-size: 0.75em;
-  border: none;
+  height: 42px;
+  width: 80px;
+  border-radius: 5px;
+  font-size: 1.5em;
+  border: 0;
   outline: none;
+  background-color: var(--dark-blue);
+  color: var(--accent-green);
 }
 
 .mode-btns.--selected {
-  background-color: brown;
-  color: burlywood;
-  font-weight: bolder;
+  background-color: var(--accent-green);
+  color: var(--light-grey);
+  font-weight: bold;
 }
 
 .colour-div {
-  height: auto;
-  width: 100%;
   display: flex;
+  
+  height: auto;
+  width: 90%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 5px;
+  background-color: var(--dark-blue);
   flex-direction: column;
+  align-items: center;
 }
 
 .colour-div p {
-  padding: 0px;
-  margin: 0 0 15px 0;
+  font-size: 1.5em;
+  color: var(--light-grey);
+  margin: 0 0 5px 0;
 }
 
 #player-colours {
@@ -180,9 +185,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   border-radius: 50%;
-  padding: 2px;
+  padding: 4px;
+  margin: 5px;
 }
 
 .colour img {
@@ -190,18 +196,9 @@ body {
 }
 
 .colour.--selected {
-  border: 2px solid black;
+  border-color:  var(--accent-green);
 }
 
-#start-game {
-  margin-top: 10px;
-  width: 240px;
-  border: none;
-  outline: none;
-  border-radius: 10px;
-  font-size: 0.75em;
-  padding: 15px 0;
-}
 
 /* ------------------------------------ */
 /* ------------- JOIN PAGE ------------ */
@@ -216,9 +213,6 @@ body {
 #top-nav {
   width: 90%;
   height: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 0 5%;
 }
 
@@ -239,9 +233,6 @@ body {
   height: 100px;
   background-color: blanchedalmond;
   margin-top: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .text-info {

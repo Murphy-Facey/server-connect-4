@@ -231,14 +231,18 @@ io.on('connection', socket => {
     // if this is not the first game won, increase the player's streak
     // else initialize the leaderboard an set the first winning streak
     if (JSON.stringify(room.leaderboard) != JSON.stringify({})) {
-      room.leaderboard[room.names[room.colours.indexOf(winner)]] += 1;
+      room.leaderboard[room.ids[room.colours.indexOf(winner)]].streak += 1;
     } else {
-      for (var name of room.names) {
-        room.leaderboard[name] = 0;
+      for (var i in room.ids) {
+        room.leaderboard[room.ids[i]] = {
+          name: room.names[i],
+          streak: 0
+        };
       }
-      room.leaderboard[room.names[room.colours.indexOf(winner)]] = 1;
+      room.leaderboard[room.ids[room.colours.indexOf(winner)]].streak = 1;
     }
     
+    console.log(room.leaderboard);
     // this sends the leaderboard to the client side
     io.to(socket.room_id).emit('leaderboard', room.leaderboard);
   });
@@ -305,10 +309,12 @@ io.on('connection', socket => {
       room.is_first_played = false;
       socket.leave(socket.room_id);
       let index = room.players.indexOf(socket);
-
+      
       room.players.splice(index, 1);
       room.names.splice(index, 1);
-      room.colours.splice(index, 1);
+
+      if(room.colours !== undefined)
+        room.colours.splice(index, 1);
 
       if (room.players.length === 0) {
         delete GAME_ROOMS[socket.room_id];

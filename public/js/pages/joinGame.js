@@ -1,6 +1,6 @@
 function create_join_screen(game_board, rooms, colour_lists) {
   game_board.innerHTML = `
-  <div id='top-nav'>
+  <div id='top-nav' class='sp-bn'>
     <h1>Games</h1>
     <div class='nav-btns'>
       <button id='back_btn'>Back</button>
@@ -18,7 +18,7 @@ function create_game_div(rooms) {
   const room_container = document.getElementById('games');
   for(var room of rooms) {
     room_container.innerHTML += `
-    <div class='game'>
+    <div class='game sp-bn'>
       <div class='text-info'>
         <p>Room Name: ${room.name}</p>
         <p>Needed Player: ${room.capacity}</p>

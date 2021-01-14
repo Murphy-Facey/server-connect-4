@@ -1,13 +1,13 @@
 function create_game_screen(gane_board) {
   gane_board.innerHTML = `
-  <button id='back_btn'>Back</button>
-	<div class='info-div'>
+  
+	<div class='info-div sp-bn'>
     <p>Room Name</p>
-    <input type='text' id='room-name'/>
+    <input type='text' id='room-name' class='text-box'/>
   </div>
-  <div class='info-div'>
+  <div class='info-div sp-bn'>
     <p>Game Mode</p>
-    <div class='inner-div'>
+    <div class='inner-div sp-bn'>
       <button id='one-player' class='mode-btns'>1P</button>
       <button id='two-player' class='mode-btns'>2P</button>
       <button id='four-player' class='mode-btns'>4P</button>
@@ -17,7 +17,11 @@ function create_game_screen(gane_board) {
     <p>Player Color</p>
     <div id='player-colours'></div>
   </div>
-  <button id='start-game'>Start Game</button>
+  <div class='info-div sp-bn'>
+    <button id='start-game' class='big-btn'>Start Game</button>
+    <button id='back_btn' class='big-btn'>Back</button>
+  </div>
+  
   `;
 }
 

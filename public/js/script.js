@@ -73,14 +73,19 @@ socket.on('config-game', colours => {
   document.querySelectorAll('.mode-btns').forEach(button => {
     button.addEventListener('click', () => {
       let selected_game_mode = document.querySelector('.--selected');
-      if (selected_game_mode !== null) {
+      
+      if (selected_game_mode !== null) 
         selected_game_mode.classList.remove('--selected');
-      }
 
       button.classList.add('--selected');
 
       GAME_MODE = button.id;
       PLAYER_COLOUR = undefined;
+
+      // let hidden = document.querySelector('.colour-div');
+      // if (hidden.style.display === "") {
+      //   hidden.style.display = 'flex';
+      // }
 
       create_discs_2(colours, button.id);
 
@@ -266,6 +271,7 @@ socket.on('update-time', ({ time, id }) => {
 });
 
 socket.on('start-screen', () => {
+  GAME.classList.remove('active-game');
   create_start_screen();
 });
 
