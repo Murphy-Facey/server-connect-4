@@ -72,6 +72,8 @@ io.on('connection', socket => {
       room.capacity = 1;
       room.board_size = [6, 7];
       room.times = [0, 0];
+      PLAYERS = PLAYERS.filter(player => player.id !== room.ids[0]);
+
       // this gets name of the next player 
       socket.emit('next-player');           
     } else if (game_mode === 'two-player') {
@@ -171,12 +173,6 @@ io.on('connection', socket => {
     room.current_player = room.colours[0];
     room.colours.push(other_colour);
 
-    PLAYERS.push({
-      id: room.ids[room.ids.length - 1],
-      name: next_player_name,
-      streak: 0
-    });
-
     room.board = create_game_board(room.board_size[0], room.board_size[1]);
     
     // this set ups the board on the client side for all players
@@ -250,13 +246,31 @@ io.on('connection', socket => {
     
     // if this is not the first game won, increase the player's streak
     // else initialize the leaderboard an set the first winning streak
-    PLAYERS.find((player) => player.id === room.ids[room.colours.indexOf(winner)]).streak += 1;
-    
-    // this sends the leaderboard to the client side
-    io.to(socket.room_id).emit('leaderboard', {
-      leaderboard: PLAYERS.sort((a, b) => b.streak - a.streak),
-      ids: room.ids
-    });
+    if(room.mode !== 'one-player') {
+      PLAYERS.find((player) => player.id === room.ids[room.colours.indexOf(winner)]).streak += 1;
+      io.to(socket.room_id).emit('leaderboard', {
+        leaderboard: PLAYERS.sort((a, b) => b.streak - a.streak),
+        ids: room.ids
+      });
+    } else {
+      if(room.leaderboard === undefined) {
+        room.leaderboard = [];
+        for(let i in room.ids) {
+          room.leaderboard.push({
+            id: room.ids[i],
+            name: room.names[i],
+            streak: 0
+          });
+        }
+        room.leaderboard.find(player => player.id === room.ids[room.colours.indexOf(winner)]).streak = 1;
+      } else {
+        room.leaderboard.find(player => player.id === room.ids[room.colours.indexOf(winner)]).streak += 1;
+      }
+      io.to(socket.room_id).emit('leaderboard', {
+        leaderboard: room.leaderboard.sort((a, b) => b.streak - a.streak),
+        ids: room.ids
+      });
+    }
   });
 
   socket.on('restart-game', () => {

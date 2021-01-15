@@ -73,8 +73,8 @@ socket.on('config-game', colours => {
   document.querySelectorAll('.mode-btns').forEach(button => {
     button.addEventListener('click', () => {
       let selected_game_mode = document.querySelector('.--selected');
-      
-      if (selected_game_mode !== null) 
+
+      if (selected_game_mode !== null)
         selected_game_mode.classList.remove('--selected');
 
       button.classList.add('--selected');
@@ -225,7 +225,7 @@ socket.on('game-over', ({ winner, rows, cols }) => {
     socket.emit('update-streak', winner);
 });
 
-socket.on('leaderboard', ({leaderboard, ids}) => {
+socket.on('leaderboard', ({ leaderboard, ids }) => {
   create_leaderboard(
     document.getElementById('leaderboard'),
     Object.keys(leaderboard),
@@ -274,9 +274,9 @@ socket.on('start-screen', () => {
 });
 
 function create_start_screen() {
-  let body = document.querySelector('body');
-  body.innerHTML = '';
-  body.append(GAME);
+  //let body = document.querySelector('body');
+  document.body.innerHTML = '';
+  document.body.append(GAME);
   GAME.classList.remove('game-board');
   GAME.classList.remove('blurred');
   GAME.classList.add('start-screen');
